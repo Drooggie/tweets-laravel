@@ -39,10 +39,10 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
-                                <!-- <NavLink :href="route('tweets.index')" 
+                                <NavLink :href="route('tweets.index')" 
                                          :active="route().current('tweets.index')">
                                     Tweets
-                                </NavLink> -->
+                                </NavLink>
                             </div>
                         </div>
 

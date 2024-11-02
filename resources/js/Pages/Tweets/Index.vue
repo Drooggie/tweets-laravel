@@ -1,8 +1,11 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import Tweet from '@/Components/Tweet.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm, Head } from '@inertiajs/vue3';
+
+defineProps(['tweets'])
 
 const form = useForm({
     message: '',
@@ -24,6 +27,16 @@ const form = useForm({
                 <InputError :message="form.errors.message" class="mt-2"/>
                 <PrimaryButton class="mt-4">Tweet</PrimaryButton>
             </form>
+
+            <div class="mt-6 bg-black shadow-sm rounded-lg divide-y">
+                <Tweet
+                    v-for="tweet in tweets"
+                    :key="tweet.id"
+                    :tweet="tweet"
+                />
+            </div>
+
+
         </div>
     </AuthenticatedLayout>
 

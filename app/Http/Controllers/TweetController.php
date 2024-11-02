@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tweet;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,7 +16,9 @@ class TweetController extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render('Tweets/Index', []);
+        return Inertia::render('Tweets/Index', [
+            'tweets' => Tweet::with('user')->latest()->get(),
+        ]);
     }
 
     /**
@@ -28,9 +32,14 @@ class TweetController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $is_validated = $request->validate([
+            'message' => 'required|string|max:255'
+        ]);
+
+        $request->user()->tweets()->create($is_validated);
+        return redirect(route('tweets.index'));
     }
 
     /**
@@ -52,9 +61,16 @@ class TweetController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tweet $tweet)
+    public function update(Request $request, Tweet $tweet): RedirectResponse
     {
-        //
+        Gate::authorize('update', $tweet);
+        $is_validated = $request->validate([
+            'message' => 'required|string|max:255'
+        ]);
+
+        $tweet->update($is_validated);
+
+        return redirect(route('tweets.index'));
     }
 
     /**
